@@ -58,9 +58,11 @@ class Ui_Solicitacao(object):
         QtCore.QMetaObject.connectSlotsByName(Solicitacao)
 
     def excluirSolicitacao(self):
-        item = self.listWidget.takeItem(self.listWidget.currentRow())
-        temp = item.text().split(' ')
-        banco.Banco().excluirSolicitacao(temp[2])
+        print(self.listWidget.currentRow())
+        if self.listWidget.currentRow() >= 0:
+            item = self.listWidget.takeItem(self.listWidget.currentRow())
+            temp = item.text().split(' ')
+            banco.Banco().excluirSolicitacao(temp[2])
 
     def voltar(self):
         self.tela.close()

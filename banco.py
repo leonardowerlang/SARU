@@ -42,6 +42,7 @@ class Banco:
 		cursor = self.cnx.cursor()
 		query = ("SELECT id, nome, tickets, quantidade_acessos FROM usuario WHERE username = %s AND senha = %s")
 		cursor.execute(query, (login, senha))
+		# cursor.fetchone()[0]
 		for i in cursor:
 			return i
 		cursor.close()
@@ -58,10 +59,10 @@ class Banco:
 		self.close()
 		return False
 
-	def cadastrar(self, dados):
+	def cadastrar(self, id, dados):
 		cursor = self.cnx.cursor()
-		query = ("INSERT INTO usuario (nome, sobrenome, matricula, cpf, curso, campus, senha, username, quantidade_acessos, tickets) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-		dados = (dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[7], 0, 0)
+		query = ("UPDATE usuario SET nome = %s, sobrenome = %s, cpf = %s, curso = %s, campus = %s, senha = %s, username = %s, Cartao_id = %s, quantidade_acessos = %s, tickets = %s WHERE usuario.id = %s")
+		dados = (dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[7], 0, 0, id)
 		cursor.execute(query, dados)
 		self.cnx.commit()
 		cursor.close()
@@ -69,7 +70,7 @@ class Banco:
 
 	def buscarSolicitacoes(self):
 		cursor = self.cnx.cursor()
-		query = ("SELECT id, data_pedido, Usuario_id FROM solicitacao")
+		query = ("SELECT id, data_pedido, Usuario_id FROM solicitacao WHERE atendido = 0")
 		cursor.execute(query, ())
 		temp = []
 		for i in cursor:
@@ -80,7 +81,7 @@ class Banco:
 
 	def excluirSolicitacao(self, id):
 		cursor = self.cnx.cursor()
-		query =  ("DELETE FROM solicitacao WHERE Usuario_id = {}").format(id)
+		query =  ("UPDATE solicitacao SET atendido = 1 WHERE Usuario_id = {}").format(id)
 		cursor.execute(query)
 		cursor.close()
 		self.cnx.commit()
@@ -88,13 +89,19 @@ class Banco:
 
 	def solicitou(self, id):
 		cursor = self.cnx.cursor()
-		query = ("SELECT id FROM solicitacao WHERE Usuario_id = {}").format(id)
+		query = ("SELECT id FROM solicitacao WHERE Usuario_id = {} AND atendido = 0").format(id)
 		cursor.execute(query)
 		for i in cursor:
 			return True
 		cursor.close()
 		self.close
 		return False
+
+	def dadosUsuario(self, matricula):
+		cursor = self.cnx.cursor()
+		query = ("SELECT id, nome, sobrenome, cpf, curso, campus FROM usuario WHERE matricula = {}").format(matricula)
+		cursor.execute(query)
+		return cursor.fetchone()
 
 	def close(self):
 		self.cnx.close()

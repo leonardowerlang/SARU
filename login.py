@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import solicitarCartao
 import loginError
 import cadastro
+import hashlib
 import logo_rc
 import admin
 import banco
@@ -54,7 +55,9 @@ class Ui_sarulogin(object):
         self.tela = sarulogin
 
     def btnLogar(self):
-        temp = banco.Banco().logar(self.lineEdit.text(), self.lineEdit_2.text())
+        h = hashlib.sha1()
+        h.update((self.lineEdit_2.text()).encode('utf-8'))
+        temp = banco.Banco().logar(self.lineEdit.text(), h.hexdigest())
         if temp:
             solic = banco.Banco().solicitou(temp[0])
 
