@@ -112,6 +112,7 @@ class Ui_solicitarCartao(object):
 	def telaComprarFichas(self):
 		self.msgNovoCart.hide()
 		self.solicitarCartao.hide()
+		self.msgSolCart.hide()
 		self.msgNovasFichas.show()
 		self.inputFichas.show()
 		self.comprarButton.show()
@@ -129,11 +130,12 @@ class Ui_solicitarCartao(object):
 	def comprarFichas(self):
 		try:
 			fichas = int(self.inputFichas.text());
+			self.inputFichas.setText('')
 		except:
 			print('Erro2')
 			return
 		if fichas >= 0 and fichas <= 100:
-			self.cliente.qtdFichas = banco.Banco().comprarFichas(self.cliente.qtdFichas + int(self.inputFichas.text()), self.cliente.id)
+			self.cliente.qtdFichas = banco.Banco().comprarFichas(self.cliente.qtdFichas + fichas, self.cliente.id)
 			self.numFichas.setText(QtCore.QCoreApplication.translate("solicitarCartao", str(self.cliente.qtdFichas)))
 		else:
 			print('Erro1')

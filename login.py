@@ -73,7 +73,9 @@ class Ui_sarulogin(object):
             self.window.show()
 
     def btnLogarAdm(self):
-        temp = banco.Banco().logarAdm(self.lineEdit.text(), self.lineEdit_2.text())
+        h = hashlib.sha1()
+        h.update((self.lineEdit_2.text()).encode('utf-8'))
+        temp = banco.Banco().logarAdm(self.lineEdit.text(), h.hexdigest())
         if temp:
             self.tela.close()
             self.window = QtWidgets.QMainWindow()

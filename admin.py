@@ -45,11 +45,11 @@ class Ui_Home(object):
         QtCore.QMetaObject.connectSlotsByName(Home)
 
     def verSolicitacoes(self):
-        self.tela.close()
         self.window = QtWidgets.QMainWindow()
         self.ui = solicitacoes.Ui_Solicitacao()
         self.ui.setupUi(self.window)
         self.window.show()
+        self.tela.close()
 
     def cadastrar(self):
         self.tela.close()

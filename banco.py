@@ -1,107 +1,92 @@
-from mysql.connector import errorcode
-from datetime import datetime
-import mysql.connector
+import datetime
+import os
+import psycopg2
 
 class Banco:
 	def __init__(self):
 		try:
-			self.cnx = mysql.connector.connect(user='root', password='', host='localhost', database='id7771447_saru')
-		except mysql.connector.Error as err:
-			if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-				print("Something is wrong with your user name or password")
-			elif err.errno == errorcode.ER_BAD_DB_ERROR:
-				print("Database does not exist")
-			else:
-				print(err)
+			self.DATABASE_URL = 'postgres://lbhulooslrsocn:be3ec9a09747fb838a553d044e914636d6e348fe1cddea874558d8e737f11edf@ec2-23-23-80-20.compute-1.amazonaws.com:5432/dsqk3gs6dme27'
+			self.conn = psycopg2.connect(self.DATABASE_URL, sslmode='require')
+			self.conn.autocommit = True
+			self.cursor = self.conn.cursor()
+		except psycopg2.Error as e:
+			print('Não foi possivel conectar no banco de dados!')
+			print(e)
 
 	def inserirSolicitacao(self, id):
-		query = ("INSERT INTO solicitacao (data_pedido, Usuario_id, atendido) VALUES (%s, %s, %s)")
-		data = datetime.now()
-		data = datetime.date(data)
-		dados = (data, id, 0)
-		cursor = self.cnx.cursor()
-		cursor.execute(query, dados)
-		self.cnx.commit()
-		cursor.close()
-		self.close()
+		query = ("INSERT INTO solicitacao (data_pedido, data_entrega, usuario_id, atendido) VALUES (%s, %s, %s, %s)")
+		data = datetime.datetime.now()
+		data = datetime.datetime.date(data)
+		data1 = datetime.date(2000, 1, 1)
+		dados = (data, data1, id, 0)
+		try:
+			self.cursor.execute(query, dados)
+		except Exception as e:
+			print(e)
 
 	def comprarFichas(self, fichas, id):
 		query = ("UPDATE usuario SET tickets = %s WHERE id = %s")
 		dados = (fichas, id)
-		cursor = self.cnx.cursor()
-		cursor.execute(query, dados)
-		self.cnx.commit()
+		self.cursor.execute(query, dados)
 		query = ("SELECT tickets FROM usuario WHERE id = '{}'").format(id)
-		cursor.execute(query)
-		for i in cursor:
-			return i[0]
-		self.close()
-		return False
+		self.cursor.execute(query)
+		try:
+			temp = self.cursor.fetchone()[0]
+			return temp
+		except Exception as e:
+			print(e)
+			return False
 
 	def logar(self, login, senha):
-		cursor = self.cnx.cursor()
 		query = ("SELECT id, nome, tickets, quantidade_acessos FROM usuario WHERE username = %s AND senha = %s")
-		cursor.execute(query, (login, senha))
-		# cursor.fetchone()[0]
-		for i in cursor:
-			return i
-		cursor.close()
-		self.close()
-		return False
+		self.cursor.execute(query, (login, senha))
+		try:
+			temp = self.cursor.fetchone()
+			return temp
+		except:
+			return False
 
 	def logarAdm(self, login, senha):
-		cursor = self.cnx.cursor()
 		query = ("SELECT id FROM admin WHERE login = %s AND senha = %s")
-		cursor.execute(query, (login, senha))
-		for i in cursor:
-			return i
-		cursor.close()
-		self.close()
-		return False
+		self.cursor.execute(query, (login, senha))
+		try:
+			temp = self.cursor.fetchone()[0]
+			return temp
+		except:
+			return False
 
 	def cadastrar(self, id, dados):
-		cursor = self.cnx.cursor()
-		query = ("UPDATE usuario SET nome = %s, sobrenome = %s, cpf = %s, curso = %s, campus = %s, senha = %s, username = %s, Cartao_id = %s, quantidade_acessos = %s, tickets = %s WHERE usuario.id = %s")
-		dados = (dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[7], 0, 0, id)
-		cursor.execute(query, dados)
-		self.cnx.commit()
-		cursor.close()
-		self.close()
+		query = ("UPDATE usuario SET nome = %s, sobrenome = %s, cpf = %s, curso = %s, campus = %s, senha = %s, username = %s, Cartao_id = %s WHERE id = %s")
+		dados = (dados[0], dados[1], dados[2], dados[3], dados[4], dados[5], dados[6], dados[7], id)
+		self.cursor.execute(query, dados)
 
 	def buscarSolicitacoes(self):
-		cursor = self.cnx.cursor()
 		query = ("SELECT id, data_pedido, Usuario_id FROM solicitacao WHERE atendido = 0")
-		cursor.execute(query, ())
-		temp = []
-		for i in cursor:
-			temp.append(i)
-		cursor.close()
-		self.close()
-		return temp
+		self.cursor.execute(query, ())
+		try:
+			temp = self.cursor.fetchall()
+			return temp
+		except:
+			return False
 
 	def excluirSolicitacao(self, id):
-		cursor = self.cnx.cursor()
-		query =  ("UPDATE solicitacao SET atendido = 1 WHERE Usuario_id = {}").format(id)
-		cursor.execute(query)
-		cursor.close()
-		self.cnx.commit()
-		self.close
+		query =  ("UPDATE solicitacao SET atendido = 1 WHERE id = {}").format(id)
+		self.cursor.execute(query)
 
 	def solicitou(self, id):
-		cursor = self.cnx.cursor()
-		query = ("SELECT id FROM solicitacao WHERE Usuario_id = {} AND atendido = 0").format(id)
-		cursor.execute(query)
-		for i in cursor:
-			return True
-		cursor.close()
-		self.close
-		return False
+		query = ("SELECT id FROM solicitacao WHERE usuario_id = {} AND atendido = 0").format(id)
+		self.cursor.execute(query)
+		try:
+			temp = self.cursor.fetchone()[0]
+			return temp
+		except:
+			return False
 
 	def dadosUsuario(self, matricula):
-		cursor = self.cnx.cursor()
-		query = ("SELECT id, nome, sobrenome, cpf, curso, campus FROM usuario WHERE matricula = {}").format(matricula)
-		cursor.execute(query)
-		return cursor.fetchone()
-
-	def close(self):
-		self.cnx.close()
+		query = ("SELECT id, nome, sobrenome, cpf, curso, campus FROM usuario WHERE matricula = '{}'").format(matricula)
+		self.cursor.execute(query)
+		try:
+			temp = self.cursor.fetchone()
+			return temp
+		except:
+			return False

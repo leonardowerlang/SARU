@@ -24,14 +24,15 @@ class Ui_Solicitacao(object):
         font.setUnderline(False)
         item.setFont(font)
 
-        temp = banco.Banco().buscarSolicitacoes()
-        cont = 0
-        for i in temp:
-            self.listWidget.addItem(item)
-            item = QtWidgets.QListWidgetItem()
-            texto = self.listWidget.item(cont)
-            texto.setText(QtCore.QCoreApplication.translate("Solicitacao", "ID Usuario: " + str(i[2]) + " \t\t\tData de Solicitação: " + str(i[1])))
-            cont += 1
+        self.itens = banco.Banco().buscarSolicitacoes()
+        if self.itens:
+            cont = 0
+            for i in self.itens:
+                self.listWidget.addItem(item)
+                item = QtWidgets.QListWidgetItem()
+                texto = self.listWidget.item(cont)
+                texto.setText(QtCore.QCoreApplication.translate("Solicitacao", "ID Usuario: " + str(i[2]) + " \t\t\tData de Solicitação: " + str(i[1])))
+                cont += 1
 
 
         self.delete_2 = QtWidgets.QPushButton(Solicitacao)
@@ -58,11 +59,10 @@ class Ui_Solicitacao(object):
         QtCore.QMetaObject.connectSlotsByName(Solicitacao)
 
     def excluirSolicitacao(self):
-        print(self.listWidget.currentRow())
-        if self.listWidget.currentRow() >= 0:
+        temp = self.listWidget.currentRow()
+        if temp >= 0:
             item = self.listWidget.takeItem(self.listWidget.currentRow())
-            temp = item.text().split(' ')
-            banco.Banco().excluirSolicitacao(temp[2])
+            banco.Banco().excluirSolicitacao(self.itens[temp][0])
 
     def voltar(self):
         self.tela.close()
