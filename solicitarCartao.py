@@ -11,6 +11,7 @@ from PyQt5.QtGui import QIcon, QPixmap
 import logo_rc
 import banco
 import login
+import erro
 
 class Cliente:
 	def __init__(self, id, nome, fichas, acessos, solcitou):
@@ -132,13 +133,19 @@ class Ui_solicitarCartao(object):
 			fichas = int(self.inputFichas.text());
 			self.inputFichas.setText('')
 		except:
-			print('Erro2')
+			self.window = QtWidgets.QMainWindow()
+			self.ui = erro.Ui_cadastroJaExiste()
+			self.ui.setupUi(self.window, "Dados informados incorretamente!")
+			self.window.show()
 			return
-		if fichas >= 0 and fichas <= 100:
+		if fichas > 0 and fichas <= 100:
 			self.cliente.qtdFichas = banco.Banco().comprarFichas(self.cliente.qtdFichas + fichas, self.cliente.id)
 			self.numFichas.setText(QtCore.QCoreApplication.translate("solicitarCartao", str(self.cliente.qtdFichas)))
 		else:
-			print('Erro1')
+			self.window = QtWidgets.QMainWindow()
+			self.ui = erro.Ui_cadastroJaExiste()
+			self.ui.setupUi(self.window, "Informe um número entre 1 e 100!")
+			self.window.show()
 
 	def solicCartao(self):
 		self.cliente.solcitou = True

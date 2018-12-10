@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import hashlib
 import banco
 import admin
+import erro
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -112,7 +113,7 @@ class Ui_Form(object):
         
         self.lineEdit = QtWidgets.QLineEdit(Form)
         self.lineEdit.setEnabled(False)
-        self.lineEdit.setText('1')
+        self.lineEdit.setText('')
         self.lineEdit.setGeometry(QtCore.QRect(140, 340, 301, 25))
         self.lineEdit.setCursor(QtGui.QCursor(QtCore.Qt.IBeamCursor))
         self.lineEdit.setObjectName("lineEdit")
@@ -146,25 +147,41 @@ class Ui_Form(object):
         try:
             matricula = (int(self.lineEditMatricula.text()))
         except:
-            print('E1')
+            self.window = QtWidgets.QMainWindow()
+            self.ui = erro.Ui_cadastroJaExiste()
+            self.ui.setupUi(self.window, "Dados informados incorretamente!")
+            self.window.show()
             return
         temp = banco.Banco().dadosUsuario(matricula)
-        if temp:
-            self.idUsuario = temp[0]
-            self.lineEditMatricula.setEnabled(False)
-            self.lineEditNome.setText(temp[1])
-            self.lineEditSobrenome.setText(temp[2])
-            self.lineEditCPF.setText(temp[3])
-            self.lineEditCurso.setText(temp[4])
-            self.lineEditCampus.setText(temp[5])
-            self.usuario.setText((str(temp[1]) + '_' + str(temp[2])).lower().replace(' ', ''))
-            self.usuario.setEnabled(True)
-            self.senha.setEnabled(True)
-            self.confirmarSenha.setEnabled(True)
-            self.btnOk.hide()
-            self.btnCadastrar.show()
+        idCartao = banco.Banco().buscaIdCartao()
+        if idCartao:
+            if temp:
+                self.idUsuario = temp[0]
+                self.lineEditMatricula.setEnabled(False)
+                self.lineEditNome.setText(temp[1])
+                self.lineEditSobrenome.setText(temp[2])
+                self.lineEditCPF.setText(temp[3])
+                self.lineEditCurso.setText(temp[4])
+                self.lineEditCampus.setText(temp[5])
+                self.usuario.setText((str(temp[1]) + '.' + str(temp[2])).lower().replace(' ', ''))
+                self.lineEdit.setText(idCartao)
+                self.usuario.setEnabled(True)
+                self.senha.setEnabled(True)
+                self.confirmarSenha.setEnabled(True)
+                self.btnOk.hide()
+                self.btnCadastrar.show()
+            else:
+                self.idUsuario = -1
+                self.window = QtWidgets.QMainWindow()
+                self.ui = erro.Ui_cadastroJaExiste()
+                self.ui.setupUi(self.window, "Usuário não encontrado!")
+                self.window.show()
         else:
-            print('E3')
+            self.idUsuario = -1
+            self.window = QtWidgets.QMainWindow()
+            self.ui = erro.Ui_cadastroJaExiste()
+            self.ui.setupUi(self.window, "Não existem mais cartões disponiveis!")
+            self.window.show()
 
     def cadastrar(self):
         temp = []
@@ -184,7 +201,10 @@ class Ui_Form(object):
         try:
             temp.append(int(self.lineEdit.text()))
         except:
-            print('E2')
+            self.window = QtWidgets.QMainWindow()
+            self.ui = erro.Ui_cadastroJaExiste()
+            self.ui.setupUi(self.window, "Dados informados incorretamente!")
+            self.window.show()
             return
         banco.Banco().cadastrar(self.idUsuario, temp)
         self.tela.close()

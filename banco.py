@@ -61,7 +61,7 @@ class Banco:
 		self.cursor.execute(query, dados)
 
 	def buscarSolicitacoes(self):
-		query = ("SELECT id, data_pedido, Usuario_id FROM solicitacao WHERE atendido = 0")
+		query = ("SELECT id, data_pedido, usuario_id FROM solicitacao WHERE atendido = 0")
 		self.cursor.execute(query, ())
 		try:
 			temp = self.cursor.fetchall()
@@ -90,3 +90,26 @@ class Banco:
 			return temp
 		except:
 			return False
+
+	def buscaIdCartao(self):
+		query = ("SELECT cartao.id FROM cartao FULL OUTER JOIN usuario ON cartao.id = usuario.cartao_id WHERE cartao.id IS NULL OR usuario.id IS NULL ORDER BY cast(cartao.id as int)")
+		self.cursor.execute(query)
+		try:
+			temp = self.cursor.fetchone()[0]
+			return temp
+		except:
+			return False
+
+	def buscarCartao(self, numCartao):
+		query = ("SELECT id, nome, tickets, quantidade_acessos FROM usuario WHERE cartao_id = '{}'").format(numCartao)
+		self.cursor.execute(query)
+		try:
+			temp = self.cursor.fetchone()
+			return temp
+		except:
+			return False
+
+	def atualizarNumDeFichas(self, id, tickets, quantidade_acessos):
+		query = ("UPDATE usuario SET tickets = %s, quantidade_acessos = %s WHERE id = %s")
+		dados = (tickets, quantidade_acessos, id)
+		self.cursor.execute(query, dados)
