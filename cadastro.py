@@ -41,7 +41,7 @@ class Ui_Form(object):
         self.lineEditMatricula.setText("")
         self.lineEditMatricula.setObjectName("lineEditMatricula")
         self.labelMatricula = QtWidgets.QLabel(Form)
-        self.labelMatricula.setGeometry(QtCore.QRect(75, 66, 60, 31))
+        self.labelMatricula.setGeometry(QtCore.QRect(67, 66, 70, 31))
         self.labelMatricula.setObjectName("labelMatricula")
 
         self.lineEditNome = QtWidgets.QLineEdit(Form)
@@ -50,7 +50,7 @@ class Ui_Form(object):
         self.lineEditNome.setObjectName("lineEditNome")
         self.lineEditNome.setEnabled(False)
         self.labelNome = QtWidgets.QLabel(Form)
-        self.labelNome.setGeometry(QtCore.QRect(92, 96, 45, 31))
+        self.labelNome.setGeometry(QtCore.QRect(90, 96, 45, 31))
         self.labelNome.setObjectName("labelNome")
 
         self.lineEditSobrenome = QtWidgets.QLineEdit(Form)
@@ -59,7 +59,7 @@ class Ui_Form(object):
         self.lineEditSobrenome.setObjectName("lineEditSobrenome")
         self.lineEditSobrenome.setEnabled(False)
         self.labelSobrenome = QtWidgets.QLabel(Form)
-        self.labelSobrenome.setGeometry(QtCore.QRect(65, 126, 60, 31)) # pos X, Y tam Y , X
+        self.labelSobrenome.setGeometry(QtCore.QRect(53, 126, 82, 31)) # pos X, Y tam Y , X
         self.labelSobrenome.setObjectName("labelSobrenome")
 
         self.lineEditCPF = QtWidgets.QLineEdit(Form)
@@ -67,7 +67,7 @@ class Ui_Form(object):
         self.lineEditCPF.setObjectName("lineEditCPF")
         self.lineEditCPF.setEnabled(False)
         self.labelCPF = QtWidgets.QLabel(Form)
-        self.labelCPF.setGeometry(QtCore.QRect(99, 159, 30, 21))
+        self.labelCPF.setGeometry(QtCore.QRect(105, 159, 30, 21))
         self.labelCPF.setObjectName("labelCPF")
 
         self.lineEditCurso = QtWidgets.QLineEdit(Form)
@@ -75,7 +75,7 @@ class Ui_Form(object):
         self.lineEditCurso.setObjectName("lineEditCurso")
         self.lineEditCurso.setEnabled(False)
         self.labelCurso = QtWidgets.QLabel(Form)
-        self.labelCurso.setGeometry(QtCore.QRect(90, 190, 41, 21))
+        self.labelCurso.setGeometry(QtCore.QRect(91, 190, 42, 21))
         self.labelCurso.setObjectName("labelCurso")
 
         self.lineEditCampus = QtWidgets.QLineEdit(Form)
@@ -83,7 +83,7 @@ class Ui_Form(object):
         self.lineEditCampus.setObjectName("lineEditCampus")
         self.lineEditCampus.setEnabled(False)
         self.labelCampus = QtWidgets.QLabel(Form)
-        self.labelCampus.setGeometry(QtCore.QRect(80, 220, 55, 21))
+        self.labelCampus.setGeometry(QtCore.QRect(76, 220, 57, 21))
         self.labelCampus.setObjectName("labelCampus")
 
         self.usuario = QtWidgets.QLineEdit(Form)
@@ -91,13 +91,14 @@ class Ui_Form(object):
         self.usuario.setObjectName("usuario")
         self.usuario.setEnabled(False)
         self.labelUsuario = QtWidgets.QLabel(Form)
-        self.labelUsuario.setGeometry(QtCore.QRect(82, 253, 50, 16))
+        self.labelUsuario.setGeometry(QtCore.QRect(77, 253, 55, 16))
         self.labelUsuario.setObjectName("labelUsuario")
 
         self.senha = QtWidgets.QLineEdit(Form)
         self.senha.setGeometry(QtCore.QRect(140, 280, 301, 27))
         self.senha.setObjectName("senha")
         self.senha.setEnabled(False)
+        self.senha.setEchoMode(QtWidgets.QLineEdit.Password)
         self.labelSenha = QtWidgets.QLabel(Form)
         self.labelSenha.setGeometry(QtCore.QRect(88, 283, 50, 16))
         self.labelSenha.setObjectName("labelSenha")
@@ -106,8 +107,9 @@ class Ui_Form(object):
         self.confirmarSenha.setGeometry(QtCore.QRect(140, 310, 301, 27))
         self.confirmarSenha.setObjectName("confirmarSenha")
         self.confirmarSenha.setEnabled(False)
+        self.confirmarSenha.setEchoMode(QtWidgets.QLineEdit.Password)
         self.labelConfSenha = QtWidgets.QLabel(Form)
-        self.labelConfSenha.setGeometry(QtCore.QRect(37, 313, 85, 16))
+        self.labelConfSenha.setGeometry(QtCore.QRect(16, 313, 118, 16))
         self.labelConfSenha.setObjectName("labelConfSenha")
 
         
@@ -118,7 +120,7 @@ class Ui_Form(object):
         self.lineEdit.setCursor(QtGui.QCursor(QtCore.Qt.IBeamCursor))
         self.lineEdit.setObjectName("lineEdit")
         self.label = QtWidgets.QLabel(Form)
-        self.label.setGeometry(QtCore.QRect(71, 343, 60, 16))
+        self.label.setGeometry(QtCore.QRect(65, 343, 70, 16))
         self.label.setObjectName("label")
 
         self.btnOk = QtWidgets.QPushButton(Form)
